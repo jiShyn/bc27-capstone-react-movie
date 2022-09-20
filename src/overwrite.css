@@ -1,0 +1,39 @@
+.ant-layout-header {
+   background: #fcfcfc;
+}
+.ant-layout-footer {
+   background: #0b0b2b;
+}
+.collapse {
+   flex-direction: row-reverse;
+   font-size: 14px;
+   font-weight: 500;
+}
+
+.navbar-brand {
+   font-size: 30px;
+   font-weight: 400;
+   color: #000000;
+}
+.navbar-brand:hover {
+   color: #d7ee04;
+}
+.nav-link {
+   color: #000000;
+}
+
+.nav-link:hover {
+   color: #d7ee04;
+}
+
+.ant-breadcrumb ol {
+   flex-direction: column;
+}
+
+.ant-form-item-label {
+   overflow: initial;
+}
+
+.ant-form-item-explain-error {
+   margin-bottom: 10px;
+}
