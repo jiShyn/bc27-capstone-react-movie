@@ -3,6 +3,7 @@ import useRequest from "hooks/useRequest";
 import movieAPI from "apis/movieAPI";
 import { useDispatch, useSelector } from "react-redux";
 import ticketAPI from "apis/ticketAPI";
+import { notification } from "antd";
 
 const BookingInfo = ({ timeId }) => {
    const dispatch = useDispatch();
@@ -12,21 +13,21 @@ const BookingInfo = ({ timeId }) => {
       error,
    } = useRequest(() => movieAPI.getChairList(timeId));
 
-   const { bookingList } = useSelector((state) => state.movie);
-   // console.log('bookingList dưới useSelector', bookingList) 
+   const { selectedChairs } = useSelector((state) => state.movie);
+   // console.log('selectedChairs dưới useSelector', selectedChairs)
 
-   const totalPay = bookingList.reduce(
+   const totalPay = selectedChairs.reduce(
       (total, value) => (total += value.giaVe),
       0
    );
 
-   const handleBooking = (bookingList) => {
-      if (!bookingList) return;
+   const handleBooking = async (selectedChairs) => {
+      if (!selectedChairs) return;
 
       // console.log("maLichChieu", timeId);
       // console.log("bookingList input 2", bookingList);
 
-      const newBookingList = bookingList.map((item) => {
+      const newSelectedChairs = selectedChairs.map((item) => {
          if (!item.daDat) {
             item.daDat = !item.daDat;
          }
@@ -34,11 +35,22 @@ const BookingInfo = ({ timeId }) => {
          return item;
       });
 
-      console.log("newBookingList", newBookingList);
+      // console.log("newBookingList", newBookingList);
 
-      ticketAPI.bookingTicket(timeId, newBookingList);
-
-      // dispatch({ type: "booking", bookingArr: newBookingList });
+      try {
+         await ticketAPI.bookingTicket(timeId, newSelectedChairs);
+         // //thành công
+         // dispatch({ type: "remove"});
+         console.log("đặt vé thành công");
+         notification.success({
+            message: "Đặt vé thành công",
+         });
+      } catch (error) {
+         notification.error({
+            message: "Đặt vé thất bại",
+            description: error,
+         });
+      }
    };
 
    return (
@@ -62,7 +74,7 @@ const BookingInfo = ({ timeId }) => {
          <div className="d-flex justify-content-between py-3 fw-semibold border-1 border-bottom border-dark">
             <span>Ghế chọn :</span>{" "}
             <span>
-               {bookingList?.map((chair) => {
+               {selectedChairs?.map((chair) => {
                   return <span key={chair.maGhe}>{chair.tenGhe}, </span>;
                })}
             </span>
@@ -76,8 +88,7 @@ const BookingInfo = ({ timeId }) => {
          <button
             className="my-3  btn-style w-100 fs-5"
             onClick={() => {
-               console.log('bookingList input click Đặt Vé', bookingList)
-               handleBooking(bookingList);
+               handleBooking(selectedChairs);
             }}
          >
             ĐẶT VÉ

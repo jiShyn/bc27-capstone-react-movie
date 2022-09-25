@@ -1,7 +1,7 @@
 const initialState = {
    movies: null,
    moviesList: null,
-   bookingList: [],
+   selectedChairs: [],
    movieId: null,
    movieInfo: null,
    theaterList: [],
@@ -14,31 +14,31 @@ const movieReducer = (state = initialState, action) => {
          return { ...state, movies: action.cinemaCode };
 
       case "movieList":
-         console.log('123')
+         console.log("123");
          return { ...state, moviesList: action.cinemaName };
 
-      case "getChairs":
-         return { ...state, chairs: action.chairList };
+      // case "getChairs":
+      //    return { ...state, chairs: action.chairList };
 
       case "select":
-         const check = state.bookingList.findIndex(
+         const check = state.selectedChairs.findIndex(
             (chair) => chair.tenGhe === action.selectedChair.tenGhe
          );
          if (check === -1) {
             const newChair = [
-               ...state.bookingList,
+               ...state.selectedChairs,
                { ...action.selectedChair, isSelected: true },
             ];
-            return { ...state, bookingList: newChair };
+            return { ...state, selectedChairs: newChair };
          }
 
-         const newChair = state.bookingList.filter(
+         const newChair = state.selectedChairs.filter(
             (chair) => chair.tenGhe !== action.selectedChair.tenGhe
          );
-         return { ...state, bookingList: newChair };
+         return { ...state, selectedChairs: newChair };
 
       case "remove":
-         return { ...state, bookingList: [] };
+         return { ...state };
 
       case "getMovieId":
          return { ...state, movieId: action.movie };

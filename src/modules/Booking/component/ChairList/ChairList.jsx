@@ -6,6 +6,8 @@ import { useState, useEffect } from "react";
 
 const ChairList = ({ timeId }) => {
    const dispatch = useDispatch();
+   const { bookingList } = useSelector((state) => state.movie);
+
    const {
       data: chairs,
       isLoading,
@@ -14,19 +16,9 @@ const ChairList = ({ timeId }) => {
 
    if (!chairs) {
       return;
-   } else {
-      const chairList = chairs.danhSachGhe;
-      console.log(chairList);
-
-      dispatch({ type: "getChair", chairList });
    }
 
-   // const [isSelected, setIsSelected] = useState(false);
-   // const [isBooked, setIsBooked] = useState(false);
-
    const handleSelect = (selectedChair) => {
-      // console.log(selectedChair);
-
       if (selectedChair.daDat) {
          return;
       } else {
@@ -63,9 +55,9 @@ const ChairList = ({ timeId }) => {
                               ? "#e6b908"
                               : chair.loaiGhe === "Vip"
                               ? "#2deb0c"
-                              : // : isSelected
-                                // ? "#d10b0b"
-                                "",
+                              : chair.isSelected
+                              ? "#d10b0b"
+                              : "",
                            cursor: chair.daDat ? "not-allowed" : "pointer",
                         }}
                      >
