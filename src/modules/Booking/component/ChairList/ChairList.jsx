@@ -5,19 +5,26 @@ import { useDispatch, useSelector } from "react-redux";
 import { useState, useEffect } from "react";
 
 const ChairList = ({ timeId }) => {
+   const dispatch = useDispatch();
    const {
       data: chairs,
       isLoading,
       error,
    } = useRequest(() => movieAPI.getChairList(timeId));
-  //  console.log("data", chairs);
-   const dispatch = useDispatch();
-   const { bookingList } = useSelector((state) => state.movie);
 
-   const [isSelected, setIsSelected] = useState(false);
-   const [isBooked, setIsBooked] = useState(false);
+   if (!chairs) {
+      return;
+   } else {
+      const chairList = chairs.danhSachGhe;
+      console.log(chairList);
 
-   const handleBooking = (selectedChair) => {
+      dispatch({ type: "getChair", chairList });
+   }
+
+   // const [isSelected, setIsSelected] = useState(false);
+   // const [isBooked, setIsBooked] = useState(false);
+
+   const handleSelect = (selectedChair) => {
       // console.log(selectedChair);
 
       if (selectedChair.daDat) {
@@ -26,7 +33,7 @@ const ChairList = ({ timeId }) => {
          dispatch({ type: "select", selectedChair });
       }
    };
-  //  console.log(bookingList);
+   //  console.log(bookingList);
    return (
       <>
          <div className=" py-5 d-flex">
@@ -48,7 +55,7 @@ const ChairList = ({ timeId }) => {
                {chairs?.danhSachGhe?.map((chair) => {
                   return (
                      <button
-                        onClick={() => handleBooking(chair)}
+                        onClick={() => handleSelect(chair)}
                         className="chairs"
                         key={chair.maGhe}
                         style={{
@@ -56,9 +63,9 @@ const ChairList = ({ timeId }) => {
                               ? "#e6b908"
                               : chair.loaiGhe === "Vip"
                               ? "#2deb0c"
-                              : isSelected
-                              ? "#d10b0b"
-                              : "",
+                              : // : isSelected
+                                // ? "#d10b0b"
+                                "",
                            cursor: chair.daDat ? "not-allowed" : "pointer",
                         }}
                      >

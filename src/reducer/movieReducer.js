@@ -5,6 +5,7 @@ const initialState = {
    movieId: null,
    movieInfo: null,
    theaterList: [],
+   chairs: [],
 };
 
 const movieReducer = (state = initialState, action) => {
@@ -13,7 +14,11 @@ const movieReducer = (state = initialState, action) => {
          return { ...state, movies: action.cinemaCode };
 
       case "movieList":
+         console.log('123')
          return { ...state, moviesList: action.cinemaName };
+
+      case "getChairs":
+         return { ...state, chairs: action.chairList };
 
       case "select":
          const check = state.bookingList.findIndex(
@@ -22,10 +27,11 @@ const movieReducer = (state = initialState, action) => {
          if (check === -1) {
             const newChair = [
                ...state.bookingList,
-               { ...action.selectedChair },
+               { ...action.selectedChair, isSelected: true },
             ];
             return { ...state, bookingList: newChair };
          }
+
          const newChair = state.bookingList.filter(
             (chair) => chair.tenGhe !== action.selectedChair.tenGhe
          );
@@ -42,11 +48,6 @@ const movieReducer = (state = initialState, action) => {
 
       case "theaterList":
          return { ...state, theaterList: action.theater };
-
-      // case "booking":
-      //   console.log(state.bookingList);
-
-      //    return { ...state };
 
       default:
          return state;

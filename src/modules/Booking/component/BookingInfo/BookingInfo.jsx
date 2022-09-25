@@ -2,6 +2,7 @@ import React from "react";
 import useRequest from "hooks/useRequest";
 import movieAPI from "apis/movieAPI";
 import { useDispatch, useSelector } from "react-redux";
+import ticketAPI from "apis/ticketAPI";
 
 const BookingInfo = ({ timeId }) => {
    const dispatch = useDispatch();
@@ -12,11 +13,33 @@ const BookingInfo = ({ timeId }) => {
    } = useRequest(() => movieAPI.getChairList(timeId));
 
    const { bookingList } = useSelector((state) => state.movie);
+   // console.log('bookingList dưới useSelector', bookingList) 
 
    const totalPay = bookingList.reduce(
       (total, value) => (total += value.giaVe),
       0
    );
+
+   const handleBooking = (bookingList) => {
+      if (!bookingList) return;
+
+      // console.log("maLichChieu", timeId);
+      // console.log("bookingList input 2", bookingList);
+
+      const newBookingList = bookingList.map((item) => {
+         if (!item.daDat) {
+            item.daDat = !item.daDat;
+         }
+         // console.log("item.daDat", item.daDat);
+         return item;
+      });
+
+      console.log("newBookingList", newBookingList);
+
+      ticketAPI.bookingTicket(timeId, newBookingList);
+
+      // dispatch({ type: "booking", bookingArr: newBookingList });
+   };
 
    return (
       <div className="border border-dark border-2 rounded-2 p-3">
@@ -52,12 +75,14 @@ const BookingInfo = ({ timeId }) => {
          </div>
          <button
             className="my-3  btn-style w-100 fs-5"
-            // onClick={() => dispatch({ type: "booking", bookingList })}
+            onClick={() => {
+               console.log('bookingList input click Đặt Vé', bookingList)
+               handleBooking(bookingList);
+            }}
          >
             ĐẶT VÉ
          </button>
       </div>
    );
 };
-
 export default BookingInfo;
